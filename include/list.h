@@ -29,7 +29,7 @@ namespace ls
 		class const_iterator
 		{
 		public:
-			const_iterator();
+			const_iterator(){ this->current = nullptr; }
 			const Node & operator*() const
 			{
 				return *this->current;
@@ -56,8 +56,8 @@ namespace ls
 				this->operator--();
 				return temp;
 			}
-			bool operator==( const const_iterator & rhs ) const;
-			bool operator!=( const const_iterator & rhs ) const;
+			bool operator==( const const_iterator & rhs ) const { return this->current == rhs->current; }
+			bool operator!=( const const_iterator & rhs ) const { return this->current == rhs->current; }
 
 		protected:
 			Node *current;
@@ -69,28 +69,50 @@ namespace ls
 		{
 		public:
 			iterator() : const_iterator() { /* Empty */ };
-			const T & operator*() const;
-			T & operator*();
-			/* 
-			iterator & operator++();
-			iterator operator++( int );
-			iterator & operator--();
-			iterator operator--();
-			*/
+			const Node & operator*() const
+			{
+				return *this->current;
+			}
+			Node & operator*()
+			{
+				return *this->current;
+			}
+	
+			iterator & operator++()
+			{
+				this->current = this->current->next;
+				return *this;
+			}
+			iterator operator++( int )
+			{
+				iterator temp = this->current;
+				this->operator++();
+				return *temp;
+			}
+			iterator & operator--()
+			{
+				this->current = this->current->prev;
+				return *this;
+			}
+			iterator operator--( int )
+			{
+				iterator temp = this->current;
+				this->operator--();
+				return *temp;
+			}
+
 		protected:
-			iterator( Node *p ) : const_iterator( p ) {};
+			iterator( Node *p ) : const_iterator( p ) { /* Empty */ };
 			friend class list<T>;
 		};
 
 		//== SPECIAL MEMBERs
-		list()
-		{
-			iniciar_list();
-		}
+
+		list(){ this->iniciar_list(); }
 		
 		explicit list( size_type count )
 		{		
-			iniciar_list();
+			this->iniciar_list();
 			for( size_type i = 0; i < count; ++i)
 			{
 				this->push_back( T() ); //< Duvida
@@ -100,7 +122,7 @@ namespace ls
 		template < typename InputIt >
 		list( InputIt first, InputIt last )
 		{
-			iniciar_list();
+			this->iniciar_list();
 			InputIt current = first; //< Aponta para o valor atual
 			while( current != last )
 			{
@@ -110,7 +132,7 @@ namespace ls
 
 		list( const list & other )
 		{
-			iniciar_list();
+			this->iniciar_list();
 			Node * current = other.m_head; //< Aponta para o head da outra lista
 			for( size_type i = 0; i <  other.m_size; ++i ) //< Percorre a outra lista 
 			{
@@ -121,21 +143,18 @@ namespace ls
 
 		list( std::initializer_list<T> ilist )
 		{
-			iniciar_list();
+			this->iniciar_list();
 			for( auto value : ilist ) //< Percorre toda a lista de inicialização.
 			{
 				this->push_back( value );
 			}
 		}
 		
-		~list()
-		{
-			//clear();
-		}
+		~list(){ this->clear(); }
 		
 		list & operator=( const list & other )
 		{
-			iniciar_list();
+			this->iniciar_list();
 			Node * current = other.m_head; //< Aponta para o head da outra lista
 			for( size_type i = 0; i <  other.m_size; ++i ) //< Percorre a outra lista 
 			{
@@ -147,7 +166,7 @@ namespace ls
 
 		list & operator=( std::initializer_list<T> ilist )
 		{
-			iniciar_list();
+			this->iniciar_list();
 			for( auto value : ilist ) //< Percorre toda a lista de inicialização.
 			{
 				this->push_back( value );
@@ -156,7 +175,7 @@ namespace ls
 		}
 
 		//== DEBUG
-		void printList()
+		void printList() //< Função para printar a list.
 		{
 			std::cout << "[ ";
 			Node * current = this->m_head;
@@ -175,33 +194,36 @@ namespace ls
 		const_iterator cend() const;
 
 		//== Capacity
+
 		size_type size() const { return this->m_size; }
-		bool empty() const { return this->m_size == 0; }
+
+		bool empty() const { return (this->m_size == 0); }
 
 		//== MODIFIERS
-		void clear();
+		void clear(){ this->iniciar_list(); } 
 		
 		T & front() //< Alterar para trabalhar com begin 
 		{ 
-			if( !empty() ) return this->m_head->data; 
-			return T(); //< O que retonar
+			/*if( !empty() )*/ return this->m_head->data; 
+			//return T(); //< O que retonar
 		}
 		
 		const T & front() const //< Alterar para trabalhar com cbegin
 		{
-			if( !empty() ) return this->m_head->data; 
-			return T(); //< O que retonar
+			/*if( !empty() )*/ return this->m_head->data; 
+			//return T(); //< O que retonar
 		}
 		
 		T & back() //< Alterar para trabalhar com end
 		{
-			if( !empty() ) return this->m_tail->data; 
-			return T(); //< O que retonar
+			/*if( !empty() )*/ return this->m_tail->data; 
+			//return T(); //< O que retonar
 		}
+
 		const T & back() const //< Alterar para trabalhar com cend
 		{
-			if( !empty() ) return this->m_tail->data; 
-			return T(); //< O que retonar
+			/*if( !empty() )*/ return this->m_tail->data; 
+			//return T(); //< O que retonar
 		}
 		
 		void push_front( const T & value )
@@ -235,21 +257,41 @@ namespace ls
 			this->m_tail = new_node;
 			++this->m_size;
 		}
+		
 		void pop_front()
 		{
 			if( !empty() )
 			{
-				/* empty */
+				Node * next_node = this->m_head->next; //< Aponta para o provavel segundo nó.
+				if(next_node != nullptr) next_node->prev = nullptr;
+				else this->m_tail = next_node; //< Se next_node for nullptr, só tem um nó.
+				this->m_head = next_node;
+				--this->m_size;
 			}
 		}
+		
 		void pop_back()
 		{
 			if( !empty() )
 			{
-				/* empty */
+				Node * prev_node = this->m_tail->prev; //< Aponta para o nó anterior ao ultimo.
+				if( prev_node != nullptr ) prev_node->next = nullptr;  //< Se prev_node for nullptr, só tem um nó.
+				else this->m_head = prev_node; //< Caso tenha só um nó;
+				this->m_tail = prev_node;
+				--this->m_size;
 			}
 		}
-		void assign( const T & value );
+		
+		void assign( const T & value )
+		{
+			if( !empty() )
+			{
+				for( size_type i = 1; i < this->m_size; ++i )
+				{
+					/* empty */ //< Vai utilizar o insert;
+				}
+			}
+		}
 
 		//== MODIFIERS WITH ITERATORS
 		template < class InItr >
