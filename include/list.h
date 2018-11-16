@@ -201,6 +201,7 @@ namespace sc
 			for( size_type i = 1; i <= this->m_size; ++i )
 			{
 				this->m_head->next = current->next; //< Aponta para o proximo nó da sequencia
+				current->next->prev = this->m_head; //< O prev do proximo nó aponta para m_head
 				delete current; //< Deleta o nó
 				current	= this->m_head->next; //< aponta para o novo primeiro nó da lista.	 
 			}
@@ -364,7 +365,77 @@ namespace sc
 			return it;
 		}
 
+		iterator erase( const_iterator pos )
+		{
+			Node * pc = pos.current; //< Aponta para o nó que vai ser deletado.
+			iterator it( pc->next ); //< Iterador para o proximo nó.
+			/* 
+			 * Verifica se a lista esta fazia e se o node que deseja 
+			 * delatar não é o head ou tail.
+			 */
+			if( !empty() and pc != this->m_tail and pc != this->m_head )
+			{
+				// O next do nó anterior aponta para o proximo nó da pos.
+				pc->prev->next = pc->next;
+				// O prev do proximo nó aponta para nó anterior da pos.
+				pc->next->prev = pc->prev;
+				delete pc; //< Deleta o nó
+				//pos.current = nullptr; //< 
+				--this->m_size;
+			}
+			// Retorna um iterador ao nó seguinte de pos.
+			return it;
+		}
 		
+		iterator erase( const_iterator first, const_iterator last )
+		{
+			const_iterator it = first;
+			while( it != last )
+			{
+				this->erase(it);
+				++it;
+			}
+			// Verifica se o last armazena a tail da list.
+			if( it.current != this->m_tail )
+			{
+				this->erase( it ); //< Deleta se nao for a tail da list.
+				++it;
+			}
+			// Retorna um iterador para o elemento seguinte a last. 
+			return iterator(it.current);
+		}
+
+		void assign( size_type count, const T& value )
+		{
+			this->erase( this->begin(), this->end() ); //< Limpa a lista
+			for( size_type i = 0; i < count; ++i)
+			{
+				this->push_back( value );
+			}
+		}
+
+		template < typename InItr >
+		void assign( InItr first, InItr last )
+		{
+			this->erase( this->begin(), this->end() ); //< Limpa a lista
+			InItr temp = first;
+			while( temp != last )
+			{
+				push_back( *temp );
+				++temp;
+			}
+		}
+
+		void assign( std::initializer_list<T> ilist )
+		{
+			this->erase( this->begin(), this->end() ); //< Limpa a lista
+			for( auto i: ilist )
+			{
+				this->push_back( i );
+			}
+		}
+		
+
 		//== DEBUG
 		void print_list()
 		{

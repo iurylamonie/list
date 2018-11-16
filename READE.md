@@ -84,4 +84,5 @@ operator!=()
 # 3.3 methods that require iterator (Section 3.3)
 (x)(x)(x) insert() ×3 (9 credits);
 (b) find() ×2 (6 credits);
-(c) erase() ×2 (6 credits);
+(c)(x)(x) erase() ×2 (6 credits);
+(x)(x)(x) assign

@@ -133,6 +133,28 @@ int main(int argc, char const *argv[])
 	l4.print_list();
 	l4.insert(l4.begin(), {-2, -33, -1} );
 	l4.print_list();
+
+	sc::list<int>::iterator it5 = l4.erase(++(l4.begin()));
+	l4.print_list();
+	it5.print_iterator();
+	l4.erase( it5 );
+	l4.print_list();
+	it5.print_iterator();
+
+	std::cout << ">> Lista 1" << std::endl;
+	size_type sz = 8;
+	//Se deixar (8, 1) o compilador chama assign( InItr first, InItr last )
+	// o certo seria assign( size_type count, const T& value )
+	l1.assign( sz , -1);
+	l1.print_list();
+	l1.assign( v.begin(), v.end() );
+	l1.print_list();
+	l1.assign( {99, 999, 991, 23232, 13123,1111,2222,333} );
+	l1.print_list();
+	l1.clear();
+	l1.print_list();
+	l1.assign( {99, 999, 991, 23232, 13123,1111,2222,333} );
+	l1.print_list();
 	return 0;
 
 }
