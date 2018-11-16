@@ -141,7 +141,7 @@ namespace sc
 			InputIt tmp = first;
 			while( tmp != last )
 			{
-				this->push_back( tmp.current->data );
+				this->push_back( *tmp );
 				++tmp;
 			}
 		}
@@ -311,6 +311,60 @@ namespace sc
 		const_iterator cend() const { return const_iterator( this->m_tail ); }
 		iterator begin() { return iterator( this->m_head->next ); }
 		iterator end() { return iterator( this->m_tail ); }
+		
+		//== MODIFIERS WITH ITERATORS
+
+		iterator insert( const_iterator pos, const T & value )
+		{
+			if( !empty() )
+			{
+				Node * tmp = pos.current;
+				Node * new_node = new Node( value, /*prev*/ tmp->prev, /*next*/ tmp );
+				tmp->prev->next = new_node; //Aponta o next do nó anterior pra new_node
+				tmp->prev =  new_node; //Aponta o prev do pos para o new_node
+				++this->m_size;
+				return iterator( new_node );
+			}
+
+			//Se estiver vazio
+			this->push_back( value );
+			return iterator( this->m_head->next );
+		}
+
+		template < typename InItr >
+		iterator insert( const_iterator pos, InItr first, InItr last )
+		{
+			InItr currIt = first; //< Iterador atual
+			iterator it; //< Iterador para o primeiro item inserido do rage na list
+			while( currIt != last )
+			{
+				//Armazena o iterador para o primeiro item inserido.
+				if( currIt == first ) it = insert( pos, *currIt );
+				else insert( pos, *currIt );
+				++currIt;
+			}
+
+			return it; //< Retornar o iterador para o primeiro elemento inserido do rage.
+		}
+
+		iterator insert( const_iterator pos, std::initializer_list<T> ilist )
+		{
+			iterator it; //< Aponta para o primeiro item inserido do ilist na list
+			size_type aux = 0;
+			for( auto i : ilist )
+			{
+				if( aux == 0 ) //< Verifica se é o primeiro elemento
+				{
+					it = insert( pos, i );
+					++aux;	
+				}
+				else insert( pos, i );
+			}
+
+			return it;
+		}
+
+		
 		//== DEBUG
 		void print_list()
 		{

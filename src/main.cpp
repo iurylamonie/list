@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <vector>
 #include "list.h"
 
 int main(int argc, char const *argv[])
@@ -92,9 +92,6 @@ int main(int argc, char const *argv[])
 	std::cout << ((it == it2)? "Sim":"Não") << std::endl;
 	std::cout << ((it != it2)? "Sim":"Não") << std::endl;
 	
-	sc::list<int> l7( l1.cbegin(), l1.cend() ); //< list( InputIt first, InputIt last )
-	l7.print_list();
-
 	sc::list<int>::iterator it3 = l1.begin();
 	it3.print_iterator();
 	(++it3).print_iterator();
@@ -104,6 +101,26 @@ int main(int argc, char const *argv[])
 	(it3--).print_iterator();
 	it3.print_iterator();
 
+	sc::list<int>::const_iterator it4 = l4.cbegin();
+	++it4;
+	l4.insert(it4, 25);
+	l4.print_list();
+	it4 = l4.cbegin();
+	l4.insert(it4, 11);
+	l4.print_list();
+	it4 = l4.cend();
+	l4.insert(it4, 666);
+	l4.print_list();
+
+	std::vector<int> v {1,2,3,4,5};
+	l4.insert(l4.cend(), v.begin(), v.end());
+	l4.print_list();
+	l4.insert(l4.begin(), v.begin(), v.end());
+	l4.print_list();
+	l4.insert(l4.cend(), {777, 888, 999} );
+	l4.print_list();
+	l4.insert(l4.begin(), {-2, -33, -1} );
+	l4.print_list();
 	return 0;
 
 }

@@ -82,6 +82,6 @@ operator++( int )
 operator==()
 operator!=()
 # 3.3 methods that require iterator (Section 3.3)
-(a) insert() ×3 (9 credits);
+(x)(x)(x) insert() ×3 (9 credits);
 (b) find() ×2 (6 credits);
 (c) erase() ×2 (6 credits);
