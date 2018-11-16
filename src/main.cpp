@@ -1,9 +1,21 @@
 #include <iostream>
+#include <cassert>   // assert()
 #include <vector>
 #include "list.h"
 
 int main(int argc, char const *argv[])
 {
+	
+	 auto n_unit{0};
+    // Unit #1: default constructor
+    {
+        std::cout << ">>> Unit teste #" << ++n_unit << ": default constructor.\n";
+        sc::list<int> seq;
+        assert( seq.size() == 0 );
+        assert( seq.empty() == true );
+        std::cout << ">>> Passed!\n\n";
+    }
+
 	//== Contrutor Padrão, Clear, Push_front	
 	std::cout << ">> Lista 1" << std::endl;
 	sc::list<int> l1;
