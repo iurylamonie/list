@@ -12,7 +12,7 @@ Este projeto contém a implementação de uma lista Abstract Data Type (ADT) bas
 
 Foi utilizado uma copia do arquivo de testes disponibilizado no SIGAA. O conteudo do arquivo foi copiado para o ```main.cpp``` e teve algumas linhas de código adicionadas, como a crianção de uma função chamda ```myNext``` que substitui a função  ```std::next```, pois a ```std::next``` estava causando erros de compilação.
 
-Para compilar o arquivo de testes, utilize o comando ```make``` dentro da pasta list e em seguida o comando ```./bin/main``` para rodar o programa.
+Para compilar o arquivo de testes, utilize o comando ```make``` dentro da pasta ```list``` e em seguida o comando ```./bin/main``` para rodar o programa.
 
 # 2. Makefile/Compiling:
 
