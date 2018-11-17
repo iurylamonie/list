@@ -1,8 +1,8 @@
 # Autores
 
-Iury Lamonie - Turma 2
+Iury Lamonie
 & 
-Leonardo Igor - Turma 1
+Leonardo Igor
 
 # 1. Introdução:
 

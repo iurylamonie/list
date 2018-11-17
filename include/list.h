@@ -1,13 +1,3 @@
-/**
- * @autor Iury Lamonie
- * 
- * @data 15/11/2018
- * 
- * @brief Implementação de uma lista Abstract Data Type (ADT) baseada em uma lista duplamente encadeada.
- * 
- * @status	
- */
-
 #ifndef _LIST_H
 #define _LIST_H
 
@@ -737,9 +727,9 @@ bool operator==( const sc::list< T > & lhs, const sc::list< T > & rhs )
 {
 	if( lhs.size() == rhs.size() )
 	{
-		//Aponta para o primeiro elemento da list lhs
+		//Iterador para o primeiro elemento da list lhs
 		auto currLHS = lhs.cbegin();
-		//Aponta para o primeiro elemento da list rhs
+		//Iterador para o primeiro elemento da list rhs
 		auto currRHS = rhs.cbegin();
 		for ( size_type i = 1; i <= lhs.size(); ++i)
 		{
@@ -757,9 +747,9 @@ bool operator!=( const sc::list< T > &lhs,  const sc::list< T > & rhs )
 {
 	if( lhs.size() == rhs.size() )
 	{
-		//Aponta para o primeiro elemento da list lhs
+		//Iterador para o primeiro elemento da list lhs
 		auto currLHS = lhs.cbegin();
-		//Aponta para o primeiro elemento da list rhs
+		//Iterador para o primeiro elemento da list rhs
 		auto currRHS = rhs.cbegin();
 		for ( size_type i = 1; i <= lhs.size(); ++i)
 		{
