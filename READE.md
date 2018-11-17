@@ -8,6 +8,12 @@ Leonardo Igor - Turma 1
 
 Este projeto contém a implementação de uma lista Abstract Data Type (ADT) baseada em uma lista duplamente encadeada.
 
+# 2. O programa de testes:
+
+Foi utilizado uma copia do arquivo de testes disponibilizado no SIGAA. O conteudo do arquivo foi copiado para o ```main.cpp``` e teve algumas linhas de código adicionadas, como a crianção de uma função chamda ```myNext``` que substitui a função  ```std::next```, pois a ```std::next``` estava causando erros de compilação.
+
+Para compilar o arquivo de testes, utilize o comando ```make``` dentro da pasta list e em seguida o comando ```./bin/main``` para rodar o programa.
+
 # 2. Makefile/Compiling:
 
 Verifica se o setup está configurado, caso contrario, fará um novo setup chamando "make dir" e compila. Ele chama "make all" internamente.
@@ -45,44 +51,3 @@ Irá chamar "make clear" e "make dir"
 ```
 make fresh
 ```
-
-# 2.1 Constructors, Destructors, and Assignment
-1(x) list( ); 
-2(x) explicit list( size_type count ); 	
-3() template< typename InputIt > list( InputIt first, InputIt last ); 
-4(x)list( const list& other );
-5(x) list( std::initializer_list<T> ilist );
-6(x) ∼list( ); 
-7(x) list& operator=( const list& other );
-8(x) list& operator=( std::initializer_list<T> ilist );
-# 2.2 Common operations to all list implementations
-1(x) size_type size() const : return the number of elements in the container.
-1(x) void clear() : remove (either logically or physically) all elements from the container.
-1(x) bool empty() : returns true if the container contains no elements, and false otherwise.
-1(x) void push_front( const T & value ) : adds value to the front of the list.
-1(x) void push_back( const T & value ) : adds value to the end of the list.
-1(x) void pop_back() : removes the object at the end of the list.
-1(x) void pop_front() : removes the object at the front of the list.
-1(x) const T & back() const : returns the object at the end of the list.
-1(x) const T & front() const : returns the object at the beginning of the list.
-1(x) void assign( const T & value ) : replaces the content of the list with copies of value value .
-# 2.3 Operator overloading — non-member functions
-(x) bool operator==( const Vector& lhs, const Vector& rhs );
-(x) bool operator!=( const Vector& lhs, const Vector& rhs ;
-
-# 3.1 Getting an iterator
-iterator begin()
-const_iterator begin() const
-iterator end()
-const_iterator end() const
-# 3.2 Iterator operations
-(x) const_iterator
-operator++()
-operator++( int )
-operator==()
-operator!=()
-# 3.3 methods that require iterator (Section 3.3)
-(x)(x)(x) insert() ×3 (9 credits);
-(b) find() ×2 (6 credits);
-(c)(x)(x) erase() ×2 (6 credits);
-(x)(x)(x) assign

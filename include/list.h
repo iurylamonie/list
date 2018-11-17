@@ -17,35 +17,74 @@
 using size_type = unsigned long;
 namespace sc
 {
+	/**
+	 * @brief      Lista Abstract Data Type (ADT) baseada em uma lista duplamente encadeada.
+	 *
+	 * @tparam     T     Representa o tipo do template.
+	 */
 	template < typename T>
 	class list
 	{
 	private:
+		
+		/**
+		 * @brief      Representação do nó de uma lista.
+		 */
 		struct Node
 		{
 			T data;
 			Node * prev;
 			Node * next;
 
+			/**
+			 * @brief      Construtor padrão.
+			 *
+			 * @param[in]  d     Os dados.
+			 * @param      p     O nó anterior.
+			 * @param      n     O nó seguinte.
+			 */
 			Node( const T & d = T(), Node* p = nullptr, Node* n =nullptr ) : data( d ), prev( p ), next( n )
 			{
 				/* Empty */
 			}
 		};
 	public:
+		
+		/**
+		 * @brief      Iterador constante para a list.
+		 */
 		class const_iterator
 		{
 		public:
+			
+			/**
+			 * @brief      Construtor padrão.
+			 */
 			const_iterator( void ) { /* Empty */ }
 
-			const Node & operator*() const { return *this->current; }
+			/**
+			 * @brief      Operador de desreferenciação.
+			 *
+			 * @return     O objeto.
+			 */
+			const T & operator*() const { return this->current->data; }
 
+			/**
+			 * @brief      Operador de pré-incremento.
+			 *
+			 * @return     Um iterarador constante para nó Seguinte.
+			 */
 			const_iterator & operator++( void )
 			{
 				this->current = this->current->next;
 				return *this;
 			}
 
+			/**
+			 * @brief      Operador de pós-incremento.
+			 *
+			 * @return     Um iterarador constante para nó atual.
+			 */
 			const_iterator operator++( int )
 			{
 				const_iterator temp( this->current );
@@ -53,12 +92,22 @@ namespace sc
 				return temp;
 			}
 
+			/**
+			 * @brief      Operador de pré-decremento.
+			 *
+			 * @return     Um iterarador constante para o nó anterior.
+			 */
 			const_iterator & operator--( void )
 			{
 				this->current = this->current->prev;
 				return *this;
 			}
 
+			/**
+			 * @brief      Operador de pós-decremento.
+			 *
+			 * @return     Um iterarador constante para o nó atual.
+			 */
 			const_iterator operator--( int )
 			{
 				const_iterator temp( this->current );
@@ -66,10 +115,29 @@ namespace sc
 				return temp;
 			}
 
+			/**
+			 * @brief      Operador de igualdade
+			 *
+			 * @param[in]  rhs   O iterador do lado direito
+			 *
+			 * @return     true se ambos o iteradores se referem à mesma localização dentro da list.
+			 */
 			bool operator==( const const_iterator & rhs ) const { return this->current == rhs.current; }
+			
+			/**
+			 * @brief      Operador de desiguldade
+			 *
+			 * @param[in]  rhs   O iterador do lado direito
+			 *
+			 * @return     true se ambos o iteradores não se referem à mesma localização dentro da list.
+			 */
 			bool operator!=( const const_iterator & rhs ) const { return this->current != rhs.current; }
 			
 			//==DEBUG
+			
+			/**
+			 * @brief      Imprimite o objeto do iterador. <!Apenas para testes!>
+			 */
 			void print_iterator( )
 			{
 				std::cout << this->current->data << std::endl;
@@ -80,43 +148,91 @@ namespace sc
 			friend class list<T>;
 		};
 
+		/**
+		 * @brief      Iterador para list.
+		 */
 		class iterator : public const_iterator
 		{
 		public:
 			iterator( void ) : const_iterator() { /*Empty*/ } //< Preciso criar essas funções?
-			/*
-			const Node & operator*() const
+			
+			/**
+			 * @brief      Operador de desreferenciação.
+			 *
+			 * @return     O objeto.
+			 */
+			const T & operator*() const
 			{
-				return const_iterator::operator*();
+				return this->current->data;
 			}
-			Node & operator*()
+
+			/**
+			 * @brief      Operador de desreferenciação.
+			 *
+			 * @return     O objeto.
+			 */
+			T & operator*()
 			{
-				return const_iterator::operator*();
+				return this->current->data;
 			}
 	
-			iterator & operator++()
+			/**
+			 * @brief      Operador de pré-incremento.
+			 *
+			 * @return     Um iterarador constante para nó seguinte.
+			 */
+			iterator & operator++( void )
 			{
-				return const_iterator::operator++();
+				this->current = this->current->next;
+				return *this;
 			}
+
+			/**
+			 * @brief      Operador de pós-incremento.
+			 *
+			 * @return     Um iterarador constante para nó atual.
+			 */
 			iterator operator++( int )
 			{
-				return const_iterator::operator++( int );
+				iterator temp( this->current );
+				this->operator++();
+				return temp;
 			}
-			iterator & operator--()
+
+			/**
+			 * @brief      Operador de pré-decremento.
+			 *
+			 * @return     Um iterarador constante para nó anterior.
+			 */
+			iterator & operator--( void )
 			{
-				return const_iterator::operator--();
+				this->current = this->current->prev;
+				return *this;
 			}
+
+			/**
+			 * @brief      Operador de pós-decremento.
+			 *
+			 * @return     Um iterarador constante para nó atual.
+			 */
 			iterator operator--( int )
 			{
-				return const_iterator::operator--( int );
-			}*/
+				iterator temp( this->current );
+				this->operator--();
+				return temp;
+			}
 		
 		protected:
+			
 			iterator( Node * p ) : const_iterator( p ) {}
 			friend class list<T>;
 			
 		};
 		//== SPECIAL MEMBERS
+		
+		/**
+		 * @brief      Construtor padrão. Constrói uma lista vazia.
+		 */
 		list( void )
 		{
 			this->m_size = 0;
@@ -126,6 +242,11 @@ namespace sc
 			this->m_tail->prev = this->m_head;
 		}
 
+		/**
+		 * @brief      Constrói a lista com count-nós com valor padrão de T.
+		 *
+		 * @param[in]  count  A quantade de nós.
+		 */
 		explicit list( size_type count ) : list()
 		{
 			for( size_type i = 0; i < count; ++i )
@@ -135,8 +256,16 @@ namespace sc
 
 		} 
 
+		/**
+		 * @brief      Constrói a lista com o couteudo do intervalo [first, last].
+		 *
+		 * @param[in]  first    Primeiro elemento do intervalo.
+		 * @param[in]  last     Ultimo elemento do intervalo.
+		 *
+		 * @tparam     InputIt  Input Iterator
+		 */
 		template< typename InputIt > 
-		list( InputIt first, InputIt last ) : list() //< revisar codigo do construtor.
+		list( InputIt first, InputIt last ) : list()
 		{
 			InputIt tmp = first;
 			while( tmp != last )
@@ -146,6 +275,11 @@ namespace sc
 			}
 		}
 		
+		/**
+		 * @brief      Construtor copia.
+		 *
+		 * @param[in]  other  Outra lista.
+		 */
 		list( const list& other ) : list()
 		{
 			Node * tmp = other.m_head->next; //< Aponta para o primeiro nó da outra lista.
@@ -157,6 +291,11 @@ namespace sc
 			}
 		}
 
+		/**
+		 * @brief      Construtor para lista inicializadora.
+		 *
+		 * @param[in]  ilist  A lista inicializadora
+		 */
 		list( std::initializer_list<T> ilist ) : list()
 		{
 			for( auto value : ilist ) //< Percorre toda ilist.s
@@ -165,11 +304,29 @@ namespace sc
 			}
 		}
 
+		/**
+		 * @brief      Destrutor
+		 */
 		~list( void ) { clear(); }
 
+		/**
+		 * @brief      Operador de copia por atribuição.
+		 *
+		 * @param[in]  other  A outra lista.
+		 *
+		 * @return     Referencia a lista.
+		 */
 		list& operator=( const list& other )
 		{
-			list();
+			if(!empty()) clear(); //< Verifica se está vazio. Se não estiver, limpa.
+			//Inicia a LIST
+			this->m_size = 0;
+			this->m_head = new Node(); //< extra node
+			this->m_tail = new Node(); //< extra node
+			this->m_head->next = this->m_tail;
+			this->m_tail->prev = this->m_head;
+			//Fim da inicialização
+
 			Node * temp = other.m_head->next; //< Aponta para o primeiro nó da outra lista.
 			//Percorre a outra lista.
 			for( size_type i = 0; i <  other.m_size; ++i )
@@ -180,9 +337,23 @@ namespace sc
 			return *this;
 		}
 
+		/**
+		 * @brief      Operador de copia por atribuição.
+		 *
+		 * @param[in]  ilist  A lista inicializadora.
+		 *
+		 * @return     Referencia a lista.
+		 */
 		list & operator=( std::initializer_list<T> ilist )
 		{
-			list();
+			if(!empty()) clear(); //< Verifica se está vazio. Se não estiver, limpa.
+			//Inicia a LIST
+			this->m_size = 0;
+			this->m_head = new Node(); //< extra node
+			this->m_tail = new Node(); //< extra node
+			this->m_head->next = this->m_tail;
+			this->m_tail->prev = this->m_head;
+			//Fim da inicializaçãos
 			for( auto value : ilist ) //< Percorre toda a lista de inicialização.
 			{
 				this->push_back( value );
@@ -191,10 +362,26 @@ namespace sc
 		}
 
 		//== Capacity
-		size_type size( void ) { return this->m_size; }
+		
+		/**
+		 * @brief      Número de nós da lista.
+		 *
+		 * @return     Tamanho da lista.
+		 */
+		const size_type size( void ) const { return this->m_size; }
+		
+		/**
+		 * @brief      Verifica se a lista está vazia.
+		 *
+		 * @return     True se estiver vazia, false caso contrário.
+		 */
 		bool empty( void ) { return (this->m_size == 0); }
 
 		//== MODIFIERS
+		
+		/**
+		 * @brief      Limpa a lista.
+		 */
 		void clear( void ) 
 		{
 			Node * current = this->m_head->next; //< Aponta para ao primeiro nó da lista
@@ -208,6 +395,11 @@ namespace sc
 			this->m_size = 0;
 		}
 
+		/**
+		 * @brief      Insere um novo nó na "cabeça" da lista.
+		 *
+		 * @param[in]  value  O valor do objeto.
+		 */
 		void push_front( const T & value )
 		{
 			Node * new_node = new Node( value, /*prev*/ this->m_head, /*next*/ this->m_head->next );
@@ -216,6 +408,11 @@ namespace sc
 			++this->m_size;
 		}
 
+		/**
+		 * @brief      Insere um novo nó na "cauda" da lista.
+		 *
+		 * @param[in]  value  O valor do objeto.
+		 */
 		void push_back( const T & value )
 		{
 			Node * new_node = new Node( value, /*prev*/ this->m_tail->prev, /*next*/ this->m_tail );
@@ -224,6 +421,9 @@ namespace sc
 			++this->m_size;
 		}
 
+		/**
+		 * @brief      Deleta o ultimo nó.
+		 */
 		void pop_back( void )
 		{
 			if( !empty() )
@@ -236,6 +436,9 @@ namespace sc
 			}
 		}
 
+		/**
+		 * @brief      Deleta o primeiro nó.
+		 */
 		void pop_front( void )
 		{
 			if( !empty() )
@@ -248,10 +451,25 @@ namespace sc
 			}
 		}
 
+		/**
+		 * @brief      Retorna o objeto do ultimo nó.
+		 *
+		 * @return     O objeto.
+		 */
 		const T & back() const { return this->m_tail->prev->data ; }
 
+		/**
+		 * @brief      Retorna o objeto do primeiro nó.
+		 *
+		 * @return     O objeto.
+		 */
 		const T & front() const { return this->m_head->next->data ; }
 
+		/**
+		 * @brief      Substitui todo o conteudo da lista por copiar de um valor.
+		 *
+		 * @param[in]  value  O valor
+		 */
 		void assign( const T & value )
 		{
 			if( !empty() )
@@ -265,56 +483,48 @@ namespace sc
 			}
 		}
 		
-		//== Operator overloading
-		bool operator==( const list & rhs )
-		{
-			if( this->m_size == rhs.m_size )
-			{
-				//Aponta para o primeiro elemento da list lhs
-				Node * currLHS = this->m_head->next;
-				//Aponta para o primeiro elemento da list rhs
-				Node * currRHS = rhs.m_head->next;
-				for ( size_type i = 1; i <= this->m_size; ++i)
-				{
-					if( currLHS->data != currRHS->data ) return false;
-					currRHS = currRHS->next;
-					currLHS = currLHS->next;
-				}
-				return true;
-			}
-
-			return false;
-		}
-
-		bool operator!=( const list & rhs )
-		{
-			if( this->m_size == rhs.m_size )
-			{
-				//Aponta para o primeiro elemento da list lhs
-				Node * currLHS = this->m_head->next;
-				//Aponta para o primeiro elemento da list rhs
-				Node * currRHS = rhs.m_head->next;
-				for ( size_type i = 1; i <= this->m_size; ++i)
-				{
-					if( currLHS->data != currRHS->data ) return true;
-					currRHS = currRHS->next;
-					currLHS = currLHS->next;
-				}
-				return false;
-			}
-
-			return true;
-		}
+		
 
 		//== ITERATORS
 
+		/**
+		 * @brief      Retorna um iterador constante apontando para o primeiro item da lista.
+		 *
+		 * @return     O iterador constante.
+		 */
 		const_iterator cbegin() const { return const_iterator( this->m_head->next ); }
+		
+		/**
+		 * @brief      Retorna um iterador constante apontando para cauda da lista.
+		 *
+		 * @return     O iterador constante.
+		 */
 		const_iterator cend() const { return const_iterator( this->m_tail ); }
+		
+		/**
+		 * @brief      Retorna um iterador apontando para o primeiro item da lista.
+		 *
+		 * @return     O iterador.
+		 */
 		iterator begin() { return iterator( this->m_head->next ); }
+		
+		/**
+		 * @brief      Retorna um iterador  apontando para cauda da lista.
+		 *
+		 * @return     O iterador.
+		 */
 		iterator end() { return iterator( this->m_tail ); }
 		
-		//== MODIFIERS WITH ITERATORS
+		//== MODIFIERS WITH ITERATORS AND CONST ITERATORS
 
+		/**
+		 * @brief      Adiciona o valor antes da posição informada.
+		 *
+		 * @param[in]  pos    A posição.
+		 * @param[in]  value  O valor.
+		 *
+		 * @return     Um iterador apontando para o valor inserido.
+		 */
 		iterator insert( const_iterator pos, const T & value )
 		{
 			if( !empty() )
@@ -332,6 +542,17 @@ namespace sc
 			return iterator( this->m_head->next );
 		}
 
+		/**
+		 * @brief      Adiciona o conteudo do intervalo [first, last] antes da posição informada.
+		 *
+		 * @param[in]  pos    A posição
+		 * @param[in]  first  O primeiro elemento do intervalo.
+		 * @param[in]  last   O ultimo elemento do intervalo.
+		 *
+		 * @tparam     InItr  Input Iterator 
+		 *
+		 * @return     Retorna um interator referenciando o primeiro elemento inserido.
+		 */
 		template < typename InItr >
 		iterator insert( const_iterator pos, InItr first, InItr last )
 		{
@@ -348,6 +569,14 @@ namespace sc
 			return it; //< Retornar o iterador para o primeiro elemento inserido do rage.
 		}
 
+		/**
+		 * @brief       Adiciona o conteudo da lista inicializadora antes da posição informada.
+		 *
+		 * @param[in]  pos    A posição.
+		 * @param[in]  ilist  lista inicializadora.
+		 *
+		 * @return     Retorna um interator referenciando o primeiro elemento inserido.
+		 */
 		iterator insert( const_iterator pos, std::initializer_list<T> ilist )
 		{
 			iterator it; //< Aponta para o primeiro item inserido do ilist na list
@@ -365,6 +594,13 @@ namespace sc
 			return it;
 		}
 
+		/**
+		 * @brief      Remove o elemento na posição informada.
+		 *
+		 * @param[in]  pos   A posição
+		 *
+		 * @return     Um iterador referenciando o nó seguinte à posição.
+		 */
 		iterator erase( const_iterator pos )
 		{
 			Node * pc = pos.current; //< Aponta para o nó que vai ser deletado.
@@ -387,6 +623,14 @@ namespace sc
 			return it;
 		}
 		
+		/**
+		 * @brief      Remove os elementos do intervalo[first, last].
+		 *
+		 * @param[in]  first  O primeiro elemento.
+		 * @param[in]  last   O ultimo elemento.
+		 *
+		 * @return     Um iterador para o nó seguinte ao ultimo removido.
+		 */
 		iterator erase( const_iterator first, const_iterator last )
 		{
 			const_iterator it = first;
@@ -395,16 +639,16 @@ namespace sc
 				this->erase(it);
 				++it;
 			}
-			// Verifica se o last armazena a tail da list.
-			if( it.current != this->m_tail )
-			{
-				this->erase( it ); //< Deleta se nao for a tail da list.
-				++it;
-			}
 			// Retorna um iterador para o elemento seguinte a last. 
 			return iterator(it.current);
 		}
 
+		/**
+		 * @brief      Substitui o conteudo da lista por n-copias do valor.
+		 *
+		 * @param[in]  count  As n-copias.
+		 * @param[in]  value  O valor.
+		 */
 		void assign( size_type count, const T& value )
 		{
 			this->erase( this->begin(), this->end() ); //< Limpa a lista
@@ -414,6 +658,14 @@ namespace sc
 			}
 		}
 
+		/**
+		 * @brief      Substitui o conteudo da lista pela copia do intervalo [first, last]
+		 *
+		 * @param[in]  first  O primeiro elemento.
+		 * @param[in]  last   O ultimo elemento.
+		 *
+		 * @tparam     InItr  Input Iterator.
+		 */
 		template < typename InItr >
 		void assign( InItr first, InItr last )
 		{
@@ -426,6 +678,11 @@ namespace sc
 			}
 		}
 
+		/**
+		 * @brief      Substitui o conteudo da lista pela copia da lista inicializadora.
+		 *
+		 * @param[in]  ilist  A ista inicializadora
+		 */
 		void assign( std::initializer_list<T> ilist )
 		{
 			this->erase( this->begin(), this->end() ); //< Limpa a lista
@@ -437,6 +694,10 @@ namespace sc
 		
 
 		//== DEBUG
+
+		/**
+		  * @brief      Imprimite os valores dentro de cada nó da lista e o tamanho da lista. <!Apenas para testes!>
+		  */
 		void print_list()
 		{
 			std::cout << "[ ";
@@ -448,13 +709,67 @@ namespace sc
 			}
 			std::cout << "] - Size: " << this->m_size << std::endl;
 		}
-
-
 	private:
 		size_type m_size;
 		Node * m_head;
 		Node * m_tail;	
 	};	
 };
+
+//== OPERATOR OVERLOADING
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const sc::list< T > & l)
+{
+	os << "[ ";
+	auto it = l.cbegin();
+	for( size_type i = 1; i <= l.size(); ++i )
+	{
+		os << *it << " ";
+		++it;
+	}
+	os << "]";
+	return os;
+}
+
+template<typename T>
+bool operator==( const sc::list< T > & lhs, const sc::list< T > & rhs )
+{
+	if( lhs.size() == rhs.size() )
+	{
+		//Aponta para o primeiro elemento da list lhs
+		auto currLHS = lhs.cbegin();
+		//Aponta para o primeiro elemento da list rhs
+		auto currRHS = rhs.cbegin();
+		for ( size_type i = 1; i <= lhs.size(); ++i)
+		{
+			if( *currLHS != *currRHS ) return false;
+			++currRHS;
+			++currLHS;
+		}
+		return true;
+	}
+	return false;
+}
+
+template<typename T>
+bool operator!=( const sc::list< T > &lhs,  const sc::list< T > & rhs )
+{
+	if( lhs.size() == rhs.size() )
+	{
+		//Aponta para o primeiro elemento da list lhs
+		auto currLHS = lhs.cbegin();
+		//Aponta para o primeiro elemento da list rhs
+		auto currRHS = rhs.cbegin();
+		for ( size_type i = 1; i <= lhs.size(); ++i)
+		{
+			if( *currLHS != *currRHS ) return true;
+			++currRHS;
+			++currLHS;
+		}
+		return false;
+	}
+	return true;
+}
 
 #endif
