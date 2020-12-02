@@ -1,9 +1,3 @@
-# Autores
-
-Iury Lamonie
-& 
-Leonardo Igor
-
 # 1. Introdução:
 
 Este projeto contém a implementação de uma lista Abstract Data Type (ADT) baseada em uma lista duplamente encadeada.
